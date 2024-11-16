@@ -146,8 +146,8 @@ const ActionDropdown = ({ file }: { file: Models.Document }) => {
           <Image
             src="/assets/icons/dots.svg"
             alt="dots"
-            width={34}
-            height={34}
+            width={30}
+            height={30}
           />
         </DropdownMenuTrigger>
         <DropdownMenuContent>

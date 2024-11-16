@@ -4,8 +4,6 @@ import Image from 'next/image';
 import React, { useEffect, useState } from 'react';
 import { Input } from './ui/input';
 import { usePathname, useRouter, useSearchParams } from 'next/navigation';
-import { set } from 'zod';
-import { Files } from 'lucide-react';
 import { getFiles } from '@/lib/actions/file.actions';
 import { Models } from 'node-appwrite';
 import Thumbnail from './Thumbnail';
@@ -49,7 +47,7 @@ const Search = () => {
     setResults([]);
 
     router.push(
-      `${file.type === 'video' || file.type == 'audio' ? 'media' : file.type + 's'}?query=${query}`
+      `${file.type === 'video' || file.type === 'audio' ? 'media' : file.type + 's'}?query=${query}`
     );
   };
 

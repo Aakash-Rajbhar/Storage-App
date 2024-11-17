@@ -472,6 +472,11 @@
   .thumbnail-image {
     @apply size-full object-cover object-center !important;
   }
+
+  /* otp error message */
+  .invalid-otp {
+    @apply text-rose-600 body-2 mt-2 text-center !important;
+  }
 }
 
 /* @layer base {

@@ -1,5 +1,5 @@
+import React, { useState } from 'react';
 import { Models } from 'node-appwrite';
-import React from 'react';
 import Thumbnail from './Thumbnail';
 import FormattedDateTime from './FormattedDateTime';
 import { convertFileSize, formatDateTime } from '@/lib/utils';
@@ -25,6 +25,16 @@ const DetailRow = ({ label, value }: { label: string; value: string }) => (
 );
 
 export const FileDetails = ({ file }: { file: Models.Document }) => {
+  const [copySuccess, setCopySuccess] = useState('');
+
+  const handleCopyLink = () => {
+    navigator.clipboard
+      .writeText(file.url)
+      .then(() => setCopySuccess('Link copied!'))
+      .catch(() => setCopySuccess('Failed to copy link.'));
+    setTimeout(() => setCopySuccess(''), 3000); // Reset success message after 2 seconds
+  };
+
   return (
     <>
       <ImageThumbnail file={file} />
@@ -36,6 +46,12 @@ export const FileDetails = ({ file }: { file: Models.Document }) => {
           label="Last Updated:"
           value={formatDateTime(file.$updatedAt)}
         />
+        <div className="mt-4 flex items-center justify-between">
+          <Button onClick={handleCopyLink} className="rounded-full">
+            Copy Link
+          </Button>
+          {copySuccess && <p className="text-teal-500">{copySuccess}</p>}
+        </div>
       </div>
     </>
   );
@@ -47,6 +63,16 @@ interface Props {
   onRemove: (email: string) => void;
 }
 export const ShareInput = ({ file, onInputChange, onRemove }: Props) => {
+  const [copySuccess, setCopySuccess] = useState('');
+
+  const handleCopyLink = () => {
+    navigator.clipboard
+      .writeText(file.url)
+      .then(() => setCopySuccess('Link copied!'))
+      .catch(() => setCopySuccess('Failed to copy link.'));
+    setTimeout(() => setCopySuccess(''), 3000); // Reset success message after 2 seconds
+  };
+
   return (
     <>
       <ImageThumbnail file={file} />
@@ -60,6 +86,29 @@ export const ShareInput = ({ file, onInputChange, onRemove }: Props) => {
           onChange={(e) => onInputChange(e.target.value.trim().split(','))}
           className="share-input-field"
         />
+        <div>
+          <p className="subtitle-2 mt-4 text-light-100">Share via</p>
+          <div className="flex items-center justify-between gap-3">
+            <div className="flex items-center justify-start gap-3">
+              <Button onClick={handleCopyLink} className="rounded-full">
+                Copy Link
+              </Button>
+              <Image
+                src="/assets/icons/whatsapp.svg"
+                alt="whatsapp"
+                width={44}
+                height={44}
+                onClick={() => {
+                  const whatsappMessage = `Check out this file: ${file.url}`;
+                  const whatsappURL = `https://wa.me/?text=${encodeURIComponent(whatsappMessage)}`;
+                  window.open(whatsappURL, '_blank');
+                }}
+                className=" cursor-pointer "
+              />
+            </div>
+            {copySuccess && <p className="mt-2 text-teal-500">{copySuccess}</p>}
+          </div>
+        </div>
         <div className="pt-4 ">
           <div className="flex justify-between">
             <p className="subtitle-2 text-light-100">Shared With</p>

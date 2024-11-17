@@ -32,10 +32,12 @@ const OTPModal = ({
   const [isOpen, setIsOpen] = useState(true);
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [error, setError] = useState('');
 
   const handleSubmit = async (e: React.MouseEvent<HTMLElement>) => {
     e.preventDefault();
     setIsLoading(true);
+    setError('');
 
     try {
       // call api to verify the OTP
@@ -43,16 +45,20 @@ const OTPModal = ({
 
       if (sessionId) {
         router.push('/');
+      } else {
+        setError('Invalid OTP');
       }
     } catch (error) {
       console.log('Failed to verify OTP', error);
+      setError('Invalid OTP or expired');
     }
     setIsLoading(false);
   };
 
-  const handleRecentOtp = async () => {
+  const handleResendOtp = async () => {
     // call api to resend otp
     await sendEmailOTP({ email });
+    setError('');
   };
 
   return (
@@ -73,6 +79,11 @@ const OTPModal = ({
           <AlertDialogDescription className="subtitle-2 text-center text-light-100">
             We have sent an OTP to your{' '}
             <span className="pl-1 text-brand">{email}</span>
+            {error && (
+              <div>
+                <span className="invalid-otp">*{error}</span>
+              </div>
+            )}
           </AlertDialogDescription>
         </AlertDialogHeader>
         <InputOTP maxLength={6} value={password} onChange={setPassword}>
@@ -109,7 +120,7 @@ const OTPModal = ({
                 type="button"
                 variant="link"
                 className="pl-1 text-brand"
-                onClick={handleRecentOtp}
+                onClick={handleResendOtp}
               >
                 Click to resend
               </Button>

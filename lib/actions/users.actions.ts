@@ -89,6 +89,7 @@ export const verifySecret = async ({
     return parseStringify({ sessionId: session.$id });
   } catch (error) {
     handleError(error, 'Failed to verify OTP');
+    throw error;
   }
 };
 
